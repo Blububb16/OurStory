@@ -441,37 +441,39 @@ footer {
     width: 300px;
     max-width: calc(100% - 40px);
 }
-#top-left {
-    position: fixed;
-    top: 20vh;
-    left: 5vw;
-    width: clamp(120px, 12vw, 200px);
-    height: auto;
-    z-index: 10;
-}
-#top-right {
-    position: fixed;
-    top: 20vh;
-    right: 5vw;
-    width: clamp(110px, 11vw, 185px);
-    height: auto;
-    z-index: 10;
-}
-#bottom-left {
-    position: fixed;
-    bottom: 20vh;
-    left: 5vw;
-    width: clamp(110px, 11vw, 185px);
-    height: auto;
-    z-index: 10;
-}
+/* === GIF Corners — base (desktop) === */
+#top-left,
+#top-right,
+#bottom-left,
 #bottom-right {
     position: fixed;
-    bottom: 20vh;
-    right: 5vw;
-    width: clamp(120px, 12vw, 200px);
+    width: clamp(100px, 10vw, 160px);
     height: auto;
     z-index: 10;
+}
+
+#top-left    { top: 20px;    left: 20px;  }
+#top-right   { top: 20px;    right: 20px; }
+#bottom-left { bottom: 20px; left: 20px;  }
+#bottom-right{ bottom: 20px; right: 20px; }
+/* === Tablet (≤ 900px) — perkecil GIF === */
+@media (max-width: 900px) {
+    #top-left,
+    #top-right,
+    #bottom-left,
+    #bottom-right {
+        width: clamp(60px, 8vw, 100px);
+    }
+}
+
+/* === Mobile (≤ 600px) — sembunyikan GIF === */
+@media (max-width: 600px) {
+    #top-left,
+    #top-right,
+    #bottom-left,
+    #bottom-right {
+        display: none;
+    }
 }
 @-webkit-keyframes fade-in {
   from { opacity: 0; }
@@ -542,7 +544,7 @@ footer {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 4px;
+  margin-bottom: 4px; 
 }
  
 #progress-wrap {
