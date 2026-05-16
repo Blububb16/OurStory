@@ -1,0 +1,644 @@
+@import url('https://fonts.googleapis.com/css?family=Lobster');
+@import url('https://fonts.googleapis.com/css?family=Indie+Flower');
+
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  background: radial-gradient(
+    circle at center,
+    #FFEFEF 0%,   /* blush pink paling terang */
+    #FFD6D6 45%,  /* soft rose pink */
+    #FF9A8B 100%  /* coral pink hangat */
+  );
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── Card container ─────────────────────────────── */
+#card {
+  width: 500px;          /* FIX: was 960px (dobel) */
+  height: 580px;
+  position: relative;
+  -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+  -webkit-perspective: 5000px;
+          perspective: 5000px;
+  /* FIX: hapus translateX(-25%) — tidak perlu lagi */
+}
+
+/* ─── Shared panel ───────────────────────────────── */
+#card-front,
+#card-inside {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;           /* FIX: was 50% */
+  height: 580px;
+  -webkit-box-shadow: 2px 2px 30px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.5);
+          box-shadow: 2px 2px 30px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.5);
+}
+
+/* ─── Inside panel (always behind) ──────────────── */
+#card-inside {
+  z-index: 1;            /* FIX: di bawah front */
+  background: #FFEFEF;
+  overflow-y: auto;
+}
+
+#card-inside .wrap {
+  background: #FFEFEF;
+  -webkit-box-shadow: inset 2px 0 1px rgba(0,0,0,0.05);
+          box-shadow: inset 2px 0 1px rgba(0,0,0,0.05);
+  padding: 2em 2.5em;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ─── Inside text ────────────────────────────────── */
+#card-inside {
+  font-size: 0.93em;
+  line-height: 1.5;
+  font-family: 'Indie Flower', cursive;
+  color: #5a2a2a;
+  font-style: italic;
+  text-align: center;
+}
+
+p {
+  margin: 0.55em 0;
+}
+
+p:first-child {
+  margin-top: 0;
+}
+
+p.signed {
+  margin-top: 20px;
+  text-align: right;
+  font-family: 'Indie Flower', cursive;
+  font-weight: bold;
+  font-size: 1em;
+  color: #5a2a2a;
+}
+
+/* ─── Front panel (on top, flips open) ──────────── */
+#card-front {
+  z-index: 10;           /* FIX: di atas inside */
+  color: #FFDFDF;
+  background-color: #ee9ca7;
+  background-image: linear-gradient(to bottom, #ffd8d8 0%, #FF7777 100%);
+  -webkit-transform-origin: left center;   /* FIX: engsel di sisi kiri */
+          transform-origin: left center;
+  -webkit-transition: -webkit-transform 1s ease-in-out;
+  transition: transform 1s ease-in-out;
+  -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+  -webkit-perspective: 5000px;
+          perspective: 5000px;
+}
+
+#card-front:before {
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  display: block;
+  background-color: #FFEFEF;
+  -webkit-transform: translateZ(-1px);
+          transform: translateZ(-1px);
+  content: '';
+}
+
+#card-front .wrap {
+  padding: 1.5em 2.5em;
+  height: 100%;
+  -webkit-transition: background 1s linear;
+  transition: background 1s linear;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
+/* ─── Heading ────────────────────────────────────── */
+#card h1 {
+  text-align: center;
+  font-family: 'Lobster', cursive;
+  font-style: italic;
+  font-size: 70px;
+  text-shadow: 4px 4px 0px rgba(0,0,0,0.15),
+               1px 1px 0 #ffc8c8,
+               2px 2px 0 #ff9696,
+               3px 3px 0 #ff7d7d;
+  color: #FFF;
+}
+
+/* ─── Open / Close buttons ───────────────────────── */
+#card-front button {
+  position: absolute;
+  bottom: 1em;
+  right: -12px;
+  background: #F44;
+  color: #FFF;
+  font-family: 'Lobster', cursive;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 1.5em;
+  padding: .5em;
+  border: none;
+  cursor: pointer;
+  -webkit-box-shadow: 2px 2px 3px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.4);
+          box-shadow: 2px 2px 3px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.4);
+  z-index: 20;
+}
+
+#card-front button:hover,
+#card-front button:focus {
+  background: #F22;
+}
+
+#close {
+  display: none;
+}
+
+/* ─── Open state ─────────────────────────────────── */
+/* FIX: hanya rotateY, tidak ada translateX pada #card */
+#card.open-fully #card-front {
+  -webkit-transform: rotateY(-180deg);
+          transform: rotateY(-180deg);
+}
+
+#card.open-fully #close { display: inline; }
+#card.open-fully #open  { display: none; }
+
+#card.open-half #card-front,
+#card.close-half #card-front {
+  -webkit-transform: rotateY(-90deg);
+          transform: rotateY(-90deg);
+}
+
+#card.open-half .shadow {
+  background-color: rgba(0,0,0,0.5);
+}
+
+#card.open-fully #card-front,
+#card.close-half #card-front {
+  background: #FFEFEF;
+}
+
+#card.open-fully .shadow {
+  background-color: rgba(0,0,0,0);
+}
+
+/* ─── Cake & Candle ──────────────────────────────── */
+.cake_and_velas {
+  position: absolute;
+  bottom: 25%;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+#cake {
+  display: block;
+  position: relative;
+  margin: -10em auto 0 auto;
+}
+
+.velas {
+  background: #ffffff;
+  border-radius: 10px;
+  position: absolute;
+  top: 228px;
+  left: 50%;
+  margin-left: -2.4px;
+  margin-top: -8.33333333px;
+  width: 5px;
+  height: 35px;
+  -webkit-transform: translateY(-300px);
+          transform: translateY(-300px);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-animation: in 500ms 5s ease-out forwards;
+          animation: in 500ms 5s ease-out forwards;
+}
+
+.velas:after,
+.velas:before {
+  background: rgba(255,0,0,0.4);
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2.22222222px;
+}
+
+.velas:after  { top: 25%; left: 0; }
+.velas:before { top: 45%; left: 0; }
+
+.fuego {
+  border-radius: 100%;
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  margin-left: -2.6px;
+  width: 6.66666667px;
+  height: 18px;
+}
+
+.fuego:nth-child(1) { -webkit-animation: fuego 2s   5.5s infinite; animation: fuego 2s   5.5s infinite; }
+.fuego:nth-child(2) { -webkit-animation: fuego 1.5s 5.5s infinite; animation: fuego 1.5s 5.5s infinite; }
+.fuego:nth-child(3) { -webkit-animation: fuego 1s   5.5s infinite; animation: fuego 1s   5.5s infinite; }
+.fuego:nth-child(4) { -webkit-animation: fuego 0.5s 5.5s infinite; animation: fuego 0.5s 5.5s infinite; }
+.fuego:nth-child(5) { -webkit-animation: fuego 0.2s 5.5s infinite; animation: fuego 0.2s 5.5s infinite; }
+
+@-webkit-keyframes fuego {
+  0%, 100% {
+    background: rgba(254,248,97,0.5);
+    -webkit-box-shadow: 0 0 40px 10px rgba(248,233,209,0.2);
+    -webkit-transform: translateY(0) scale(1);
+  }
+  50% {
+    background: rgba(255,50,0,0.1);
+    -webkit-box-shadow: 0 0 40px 20px rgba(248,233,209,0.2);
+    -webkit-transform: translateY(-20px) scale(0);
+  }
+}
+@keyframes fuego {
+  0%, 100% {
+    background: rgba(254,248,97,0.5);
+    box-shadow: 0 0 40px 10px rgba(248,233,209,0.2);
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    background: rgba(255,50,0,0.1);
+    box-shadow: 0 0 40px 20px rgba(248,233,209,0.2);
+    transform: translateY(-20px) scale(0);
+  }
+}
+
+@-webkit-keyframes in { to { -webkit-transform: translateY(0); } }
+@keyframes in          { to { transform: translateY(0); } }
+
+/* ─── Card front inside (back face) ─────────────── */
+.card-front_inside {
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  height: 70%;
+  width: 80%;
+  margin: auto;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transform: translateZ(-1px) rotateY(180deg);
+          transform: translateZ(-1px) rotateY(180deg);
+  background-color: #ffefef;
+}
+
+.shadow {
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transform: translateZ(-2px) rotateY(180deg);
+          transform: translateZ(-2px) rotateY(180deg);
+  pointer-events: none;
+  -webkit-transition: background 1s linear;
+  transition: background 1s linear;
+}
+
+/* ─── Photo gallery ──────────────────────────────── */
+.photo-gallery {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  margin: 0 auto;
+}
+
+.polaroid {
+  width: 310px;
+  height: 285px;
+  position: absolute;
+  background: #1e1c18;
+  border: 7px solid #f5f5f5;
+  border-bottom: 50px solid #f5f5f5;
+  -webkit-box-shadow: 0 0 6px -1px #000;
+          box-shadow: 0 0 6px -1px #000;
+  overflow: hidden;
+  left: 0; right: 0;
+  margin: auto;
+  -webkit-transform: rotate(-5deg);
+          transform: rotate(-5deg);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  display: none;
+  -webkit-animation: fade-in 0.5s ease-in;
+          animation: fade-in 0.5s ease-in;
+}
+
+.polaroid.active { display: block; }
+
+.polaroid img,
+.polaroid .img {
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  background-position: center;
+  background-size: cover;
+    -webkit-animation: fade-in 5s ease-in;
+          animation: fade-in 5s ease-in;
+  -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
+}
+
+.photo-caption {
+  position: absolute;
+  bottom: 10px;
+  left: 10px; right: 10px;
+  color: #8b6a60;
+  font-family: 'Indie Flower', cursive;
+  font-size: 12px;
+  margin: 0;
+  text-align: center;
+  background: rgba(255,255,255,0.8);
+  padding: 4px;
+  border-radius: 3px;
+}
+
+.photo-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.photo-nav-btn {
+  background: #FFD6D6;
+  color: #FFF;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Lobster', cursive;
+  font-size: 12px;
+  -webkit-transition: background 0.3s ease;
+  transition: background 0.3s ease;
+  -webkit-box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.photo-nav-btn:hover { background: #FFD6D6; }
+
+.photo-indicator {
+  color: #8b6a60;
+  font-family: 'Lobster', cursive;
+  font-size: 12px;
+  min-width: 50px;
+  text-align: center;
+}
+
+/* ─── Misc ───────────────────────────────────────── */
+.text {
+  color: #8b6a60;
+  font-family: 'Lobster', cursive;
+  font-weight: 300;
+  font-style: italic;
+  text-align: center;
+}
+.text h1 { font-size: 1.4em; }
+
+.wishesFont {
+  font-family: 'Indie Flower', cursive;
+  font-weight: 800;
+}
+
+footer {
+  max-width: 500px;
+  margin: 40px auto;
+  font-family: 'Lobster', cursive;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #888;
+  text-align: center;
+}
+#background-music {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: block;
+    width: 300px;
+    max-width: calc(100% - 40px);
+}
+#top-left {
+    position: absolute;
+    top: 150px;
+    left: 200px;
+    width: 200px;
+    height: 175px;
+    z-index: 80;
+}
+#top-right {
+    position: absolute;
+    top: 150px;
+    right: 500px;
+    width: 185px;
+    height: 150px;
+    z-index: 80;
+}
+#bottom-left {
+    position: absolute;
+    bottom: 150px;
+    left: 200px;
+    width: 185px;
+    height: 150px;
+    z-index: 80;
+}
+#bottom-right {
+    position: absolute;
+    bottom: 150px;
+    right: 500px;
+    width: 200px;
+    height: 175px;
+    z-index: 80;
+}
+@-webkit-keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── Scrollbar ──────────────────────────────────── */
+#card-inside::-webkit-scrollbar { width: 4px; }
+#card-inside::-webkit-scrollbar-thumb { background: #e5a0a0; border-radius: 2px; }
+
+/* ─── Music Player ───────────────────────────────── */
+#music-player {
+  position: fixed;
+  right: 24px;
+  left: 700px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 220px;
+  z-index: 999;
+  font-family: 'Indie Flower', cursive;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+ 
+#player-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(30, 10, 40, 0.92);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 100, 120, 0.3);
+  padding: 10px 14px;
+}
+ 
+.play-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF5555, #cc3366);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(255, 85, 85, 0.4);
+  transition: transform 0.15s ease, background 0.2s;
+}
+.play-btn:hover { transform: scale(1.1); }
+.play-btn.playing { background: linear-gradient(135deg, #cc3366, #FF5555); }
+ 
+#player-info {
+  flex: 1;
+  min-width: 0;
+}
+ 
+#song-title {
+  display: block;
+  color: #ffccd5;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+ 
+#progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+ 
+#progress-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+  cursor: pointer;
+  overflow: hidden;
+}
+ 
+#progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #FF5555, #ff88aa);
+  border-radius: 2px;
+  transition: width 0.3s linear;
+}
+ 
+#time-display {
+  color: rgba(255,255,255,0.4);
+  font-size: 10px;
+  min-width: 32px;
+  text-align: right;
+}
+ 
+.lyric-toggle-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  color: #ffaabb;
+  border: 1px solid rgba(255,100,120,0.3);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.lyric-toggle-btn:hover,
+.lyric-toggle-btn.active { background: rgba(255, 85, 85, 0.25); color: #fff; }
+ 
+/* ─── Lyric Box ──────────────────────────────────── */
+#lyric-box {
+  background: rgba(20, 5, 30, 0.95);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255,100,120,0.15);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+ 
+#lyric-box.open {
+  max-height: 180px;
+}
+ 
+#lyric-lines {
+  padding: 12px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  max-height: 160px;
+  scroll-behavior: smooth;
+}
+ 
+#lyric-lines::-webkit-scrollbar { width: 3px; }
+#lyric-lines::-webkit-scrollbar-thumb { background: #cc3366; border-radius: 2px; }
+ 
+.lyric-line {
+  color: rgba(255, 200, 210, 0.4);
+  font-size: 13px;
+  font-family: 'Indie Flower', cursive;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.5;
+  transition: color 0.4s ease, transform 0.4s ease, font-size 0.3s ease;
+  cursor: default;
+}
+ 
+.lyric-line.active {
+  color: #ffffff;
+  font-size: 15px;
+  transform: scale(1.04);
+  text-shadow: 0 0 12px rgba(255, 100, 130, 0.7);
+}
+ 
+.lyric-line.past {
+  color: rgba(255, 200, 210, 0.25);
+}
+ 
